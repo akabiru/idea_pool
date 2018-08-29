@@ -1,4 +1,6 @@
 class UserTokenController < ApplicationController
+  skip_before_action :authorize_api_request, only: :create
+
   def create
     user = User.create!(signup_params)
     access_token = AuthenticateUser.authenticate!(user.email, user.password)
