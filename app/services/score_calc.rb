@@ -1,12 +1,16 @@
 class ScoreCalc
   attr_reader :idea
 
-  def self.avg(idea)
-    new(idea).avg
+  def self.update!(idea)
+    new(idea).update!
   end
 
   def initialize(idea)
     @idea = idea
+  end
+
+  def update!
+    idea.update(average_score: avg)
   end
 
   def avg

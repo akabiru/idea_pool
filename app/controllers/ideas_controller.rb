@@ -8,8 +8,7 @@ class IdeasController < ApplicationController
 
   def create
     idea = current_user.ideas.create!(idea_params)
-    idea_avg = ScoreCalc.avg(idea)
-    idea.update(average_score: idea_avg)
+    ScoreCalc.update!(idea)
     json_response(idea, :created)
   end
 
@@ -19,6 +18,7 @@ class IdeasController < ApplicationController
 
   def update
     @idea.update(idea_params)
+    ScoreCalc.update!(@idea)
     head :no_content
   end
 
