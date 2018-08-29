@@ -1,4 +1,4 @@
-class UserTokenController < ApplicationController
+class UsersController < ApplicationController
   skip_before_action :authorize_api_request, only: :create
 
   def create
