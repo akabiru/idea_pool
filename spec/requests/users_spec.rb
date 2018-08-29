@@ -1,13 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
-  let(:user) { build(:user) }
-  let(:headers) { valid_headers.except('Authorization') }
-  let(:valid_attributes) do
-    attributes_for(:user, password_confirmation: user.password)
+  describe 'GET /me' do
+    let(:user) { create(:user) }
+    let(:headers) { valid_headers }
+
+    context 'when valid request' do
+      before do
+        get '/me', params: {}, headers: headers
+      end
+
+      it 'returns the current user' do
+        expect(json).to eq(
+          'email' => user.email,
+          'name' => user.name,
+          'avatar_url' => user.avatar_url
+        )
+      end
+    end
   end
 
   describe 'POST /users' do
+    let(:user) { build(:user) }
+    let(:headers) { valid_headers.except('Authorization') }
+
+    let(:valid_attributes) do
+      attributes_for(:user, password_confirmation: user.password)
+    end
+
     context 'when valid request' do
       before do
         post '/users', params: valid_attributes.to_json, headers: headers
