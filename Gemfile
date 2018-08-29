@@ -27,8 +27,9 @@ gem 'jwt'
 # gem 'rack-cors'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.5'
+  gem 'guard-rspec', require: false
   gem 'pry-rails'
+  gem 'rspec-rails', '~> 3.5'
 end
 
 group :test do
