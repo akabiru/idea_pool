@@ -68,6 +68,16 @@ RSpec.describe 'Ideas API', type: :request do
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
       end
+
+      it 'returns the created idea' do
+        expect(json).to include(
+          'content' => 'Code and code some more!',
+          'confidence' => 8,
+          'impact' => 8,
+          'ease' => 8,
+          'average_score' => 8.0
+        )
+      end
     end
 
     context 'when the request is invalid' do
