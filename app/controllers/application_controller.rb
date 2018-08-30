@@ -9,6 +9,7 @@ class ApplicationController < ActionController::API
   private
 
   def authorize_api_request
-    @current_user = AuthorizeApiRequest.authorize!(request.headers)
+    authorize_access_request!
+    @current_user = AuthorizeApiRequest.authorize!(payload)
   end
 end
