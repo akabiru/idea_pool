@@ -54,12 +54,13 @@ $ bundle exec rspec -fd
 
 ## API Endpoints
 
-    $ http https://infinite-dusk-17447.herokuapp.com/ideas Authorization: "eyJ0eXAiOiJ..."
+    $ http https://infinite-dusk-17447.herokuapp.com/ideas Authorization: "Bearer eyJ0eXAiOiJ..."
 
 | EndPoint                                |   Functionality                      |
 | --------------------------------------- | ------------------------------------:|
-| POST /signup                            | Signup a user                        |
-| POST /access-tokens                       | Login user                           |
+| POST /users                            | Signup a user                        |
+| POST /access-tokens                       | Login user                         |
+| POST /access-tokens/Refresh                | Refresh token **(Header X-Refresh-Token)** |
 | DELETE /access-tokens                        | Logout user                          |
 | POST /ideas                      | Create a new bucket list             |
 | GET /ideas/                       | List all the created bucket lists    |
@@ -68,6 +69,63 @@ $ bundle exec rspec -fd
 | PUT /ideas/:id                    | Update this idea               |
 | DELETE /ideas/:id                 | Delete this single idea        |
 
+### Auth API
+
+_POST /signup_
+
+```sh
+$ echo '{"email": "jack-black@codementor.io","name": "Jack Black","password": "the-Secret-123"}' | http https://infinite-dusk-17447.herokuapp.com/users
+```
+
+_POST /access-tokens (Login)_
+
+```sh
+$ echo '{"email": "jack-black@codementor.io","password": "the-Secret-123"}' | http https://infinite-dusk-17447.herokuapp.com/access-tokens
+```
+
+_POST /access-tokens/refresh_
+
+```sh
+$ http POST https://infinite-dusk-17447.herokuapp.com/access-tokens/refresh X-Refresh-Token: 'ashdahskjdhak....'
+```
+
+_DELETE /access-tokens (Logout)_
+
+```sh
+$ http DELETE https://infinite-dusk-17447.herokuapp.com/access-tokens X-Refresh-Token: 'ashdahskjdhak....'
+```
+
+### Ideas API
+
+_POST /ideas_
+
+```sh
+$ echo '{"content": "the-content","impact": 8,"ease": 8,"confidence": 8}' | http POST https://infinite-dusk-17447.herokuapp.com/ideas Authorization: 'Bearer hajsdhkasd'
+```
+
+_GET /ideas_
+
+```sh
+$ http https://infinite-dusk-17447.herokuapp.com/ideas page==1 Authorization: 'Bearer hajsdhkasd'
+```
+
+_GET /ideas/:id_
+
+```sh
+$ http https://infinite-dusk-17447.herokuapp.com/ideas/1 Authorization: 'Bearer hajsdhkasd'
+```
+
+_PUT /ideas/:id_
+
+```sh
+$ echo '{"impact": 10}' | http PUT https://infinite-dusk-17447.herokuapp.com/ideas/1 Authorization: 'Bearer hajsdhkasd'
+```
+
+_DELETE /ideas/:id_
+
+```
+$ http DELETE https://infinite-dusk-17447.herokuapp.com/ideas/1 Authorization: 'Bearer hajsdhkasd'
+```
 
 ## Responses
 
@@ -78,8 +136,7 @@ The API responds with JSON data by default.
 The API responds with an error message and http status code whenenever it encounters an error.
 
     {
-      "error": "Not Found",
-      "status": "404"
+      "message": "Signature has expired"
     }
 
 ## Versions
