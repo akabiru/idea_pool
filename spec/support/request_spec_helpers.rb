@@ -13,9 +13,13 @@ module RequestSpecHelpers
     JsonWebToken.encode(user_id: user.id)
   end
 
+  def access_token
+    token_generator.login[:access]
+  end
+
   def valid_headers
     {
-      'Authorization' => token_generator,
+      'Authorization' => "Bearer #{access_token}",
       'Content-Type'  => 'application/json'
     }
   end

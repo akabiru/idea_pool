@@ -38,10 +38,12 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns an access token' do
-        expect(json['access_token']).not_to be_nil
+        expect(json['jwt']).not_to be_nil
       end
 
-      it 'returns a refresh token'
+      it 'returns a refresh token' do
+        expect(json['refresh_token']).not_to be_nil
+      end
     end
 
     context 'when invalid request' do
