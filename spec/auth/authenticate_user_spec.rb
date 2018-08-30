@@ -7,9 +7,8 @@ RSpec.describe AuthenticateUser do
     context 'when valid credentials' do
       subject { described_class.authenticate!(user.email, user.password) }
 
-      it 'returns an auth token' do
-        expect(subject).not_to be(nil)
-        expect(subject).to be_a(String)
+      it 'returns a JWT session' do
+        expect(subject).to be_a(JWTSessions::Session)
       end
     end
 
@@ -23,23 +22,18 @@ RSpec.describe AuthenticateUser do
     end
   end
 
-  describe '#authenticate!' do
+  describe '.login' do
     context 'when valid credentials' do
-      subject { described_class.new(user.email, user.password) }
+      subject { described_class.login(user.email, user.password) }
 
-      it 'returns an auth token' do
-        token = subject.authenticate!
-
-        expect(token).not_to be(nil)
-        expect(token).to be_a(String)
+      it 'returns the current user' do
+        expect(subject).to eq(user)
       end
     end
 
     context 'when invalid credentials' do
-      subject { described_class.new('foo', 'bar') }
-
       it 'raises an authentication error' do
-        expect { subject.authenticate! }.to raise_error(
+        expect { described_class.login('foo', 'bar') }.to raise_error(
           AuthenticateUser::AuthenticationError,
           /Invalid credentials/
         )
