@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  skip_before_action :authorize_api_request, only: :create
+  skip_before_action :authorize_api_request, only: %i[create login]
 
   def create
-    user = User.create!(signup_params)
+    user = User.create!(user_params)
     session = AuthenticateUser.authenticate!(user.email, user.password)
     login = session.login
-    credentials = { jwt: login[:access], refresh_token: login[:refresh] }
-    json_response(credentials, :created)
+    json_response(credentials(login), :created)
+  end
+
+  def login
+    user = AuthenticateUser.login(user_params[:email], user_params[:password])
+    session = JsonWebToken.decode(user_id: user.id)
+    login = session.login
+    json_response credentials(login)
   end
 
   def me
@@ -21,7 +27,11 @@ class UsersController < ApplicationController
 
   private
 
-  def signup_params
+  def credentials(login)
+    { jwt: login[:access], refresh_token: login[:refresh] }
+  end
+
+  def user_params
     params.permit(:email, :name, :password, :password_confirmation)
   end
 end

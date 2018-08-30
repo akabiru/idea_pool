@@ -5,6 +5,10 @@ class AuthenticateUser
     new(email, password).authenticate!
   end
 
+  def self.login(email, password)
+    new(email, password).login
+  end
+
   def initialize(email, password)
     @email = email
     @password = password
@@ -12,6 +16,10 @@ class AuthenticateUser
 
   def authenticate!
     JsonWebToken.encode(user_id: auth_user.id) if auth_user
+  end
+
+  def login
+    auth_user
   end
 
   private

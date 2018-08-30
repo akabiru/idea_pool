@@ -11,6 +11,8 @@ class JsonWebToken
       JWTSessions::Session.new(payload: payload)
     end
 
+    alias decode encode
+
     def refresh(payload)
       access_payload = { key: payload[:key] }
       JWTSessions::Session.new(payload: access_payload, refresh_payload: payload)
