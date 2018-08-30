@@ -5,9 +5,10 @@ class UsersController < ApplicationController
 
   def create
     user = User.create!(signup_params)
-    access_token = AuthenticateUser.authenticate!(user.email, user.password)
-    # TODO: refresh_token
-    json_response({ access_token: access_token }, :created)
+    session = AuthenticateUser.authenticate!(user.email, user.password)
+    login = session.login
+    credentials = { jwt: login[:access], refresh_token: login[:refresh] }
+    json_response(credentials, :created)
   end
 
   def me

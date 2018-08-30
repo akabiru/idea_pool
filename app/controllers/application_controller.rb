@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include JWTSessions::RailsAuthorization
   include ExceptionHandler
   include Response
 

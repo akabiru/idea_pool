@@ -7,17 +7,8 @@ class JsonWebToken
   MissingToken = Class.new(BaseError)
 
   class << self
-    def encode(sub, exp = 10.minutes.from_now)
-      payload = {
-        iss: 'https://idea-pool.herokuapp.com', # TODO: Set from host
-        sub: sub,
-        iat: Time.zone.now.to_i,
-        # aud: '', TODO: Get from allowlist
-        exp: exp.to_i,
-        jti: SecureRandom.uuid
-      }
-
-      JWT.encode(payload, HMAC_SECRET)
+    def encode(payload)
+      JWTSessions::Session.new(payload: payload)
     end
 
     def decode(token)

@@ -9,7 +9,7 @@ ruby '2.4.1'
 
 
 gem 'bcrypt', '~> 3.1.7'
-gem 'jwt'
+gem 'jwt_sessions'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.7'
 # gem 'rack-cors'
