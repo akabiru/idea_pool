@@ -1,0 +1,55 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.4-node
+        environment:
+            BUNDLE_JOBS: "3"
+            BUNDLE_RETRY: "3"
+            BUNDLE_PATH: vendor/bundle
+            PGHOST: 127.0.0.1
+            PGUSER: idea_pool
+            RAILS_ENV: test
+
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: idea_pool
+          POSTGRES_DB: idea_pool
+          POSTGRES_PASSWORD: ""
+
+    working_directory: ~/idea_pool
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-idea_pool-backend-deps-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name: Install ruby dependencies
+          command: bundle check || bundle install
+
+      # Store bundle cache
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: v1-idea_pool-backend-deps-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database Setup
+          command: |
+            bundle exec rails db:create db:schema:load --trace
+            bundle exec rails db:migrate
+
+      - run:
+          name: Run Rails REST API Tests
+          command: bundle exec rspec -fd --profile
