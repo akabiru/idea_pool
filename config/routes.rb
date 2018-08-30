@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   get '/me', to: 'users#me'
   post '/access-tokens/refresh', to: 'refresh#create'
   post '/access-tokens', to: 'users#login'
+  delete '/access-tokens', to: 'refresh#destroy'
 end

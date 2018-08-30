@@ -7,4 +7,9 @@ class RefreshController < ApplicationController
     refresh = session.refresh(found_token)
     json_response(jwt: refresh[:access])
   end
+
+  def destroy
+    JsonWebToken.flush!(payload['uid'])
+    head :no_content
+  end
 end

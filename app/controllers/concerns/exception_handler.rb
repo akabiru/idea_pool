@@ -6,8 +6,7 @@ module ExceptionHandler
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from AuthenticateUser::AuthenticationError,
                 with: :unauthorized_request
-    rescue_from JsonWebToken::InvalidToken, with: :four_twenty_two
-    rescue_from JsonWebToken::MissingToken, with: :four_twenty_two
+    rescue_from JsonWebToken::BaseError, with: :four_twenty_two
     rescue_from JWTSessions::Errors::Unauthorized, with: :unauthorized_request
   end
 
