@@ -12,4 +12,8 @@ class ApplicationController < ActionController::API
     authorize_access_request!
     @current_user = AuthorizeApiRequest.authorize!(payload)
   end
+
+  def credentials(login)
+    { jwt: login[:access], refresh_token: login[:refresh] }
+  end
 end
